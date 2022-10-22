@@ -1,0 +1,34 @@
+version: '3.1'
+volumes:
+  caches:
+services: 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        client_image_name: ${client_image_name}
+    container_name: ${app_name}
+    restart: always
+    volumes:
+      - ${data_root}/${app_name}/files:/usr/share/nginx/html/files
+      - caches:/usr/share/nginx/html/caches
+    ports:
+      - "${app_port}:443"
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    restart: always
+    container_name: ${app_name}_server
+  db:
+    image: mariadb:10.5.4
+    container_name: ${app_name}_db
+    restart: always
+    volumes:
+      - ${data_root}/${app_name}/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${db_pwd}
+  redis:
+    image: redis:6.0.6
+    container_name: ${app_name}_redis

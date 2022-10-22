@@ -1,0 +1,19 @@
+
+  SERVER_TYPE:
+    image: ${docker_user}/modlogie_server_SERVER_TYPE:${app_version}
+    container_name: ${app_name}_server_SERVER_TYPE
+    restart: always
+    volumes:
+      - ${data_root}/${app_name}/files:/app/files
+      - caches:/app/caches
+    environment:
+      "ConnectionProps:Database": "${app_name}"
+      "ConnectionProps:Password": "${db_pwd}"
+      "User:Name": "${user_name}"
+      "User:Password": "${user_pwd}"
+      "File:ContentRoot": "/app"
+      "File:Resources": "files"
+      "File:Caches": "caches"
+      "File:MaxSize": "50"
+      "Session:Cookie:CrossSite": "${app_cross_site_cookie}"
+      "Execute:InstanceName": SERVER_TYPE
